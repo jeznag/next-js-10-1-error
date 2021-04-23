@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotFound should render correctly with a 401 error 1`] = `
+<div
+  className="ant-row ant-row-center ant-row-middle bg-white text-center"
+  style={
+    Object {
+      "minHeight": "100vh",
+    }
+  }
+>
+  <div
+    className="sc-gsTCUz bWQjOv"
+  >
+    <h1
+      className="sc-dlfnbm JZVZa text-error mb-0"
+    >
+      401
+    </h1>
+    <h6
+      className="mb-1 mt-1 text-body"
+    >
+      Unauthorized
+       
+    </h6>
+    <br />
+    <a
+      className="ant-btn"
+      href="/logout"
+      onClick={[Function]}
+    >
+      <span>
+        Back to login
+      </span>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`NotFound should render correctly with a 404 error 1`] = `
+<div
+  className="ant-row ant-row-center ant-row-middle bg-white text-center"
+  style={
+    Object {
+      "minHeight": "100vh",
+    }
+  }
+>
+  <div
+    className="sc-gsTCUz bWQjOv"
+  >
+    <h1
+      className="sc-dlfnbm JZVZa text-error mb-0"
+    >
+      404
+    </h1>
+    <h6
+      className="mb-1 mt-1 text-body"
+    >
+      This page could not be found
+       
+    </h6>
+    <br />
+  </div>
+  <div
+    className="sc-bdfBwQ eZppOP"
+  >
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+  </div>
+</div>
+`;
+
+exports[`NotFound should render correctly with a 418 error 1`] = `
+<div
+  className="ant-row ant-row-center ant-row-middle bg-white text-center"
+  style={
+    Object {
+      "minHeight": "100vh",
+    }
+  }
+>
+  <div
+    className="sc-gsTCUz bWQjOv"
+  >
+    <h1
+      className="sc-dlfnbm JZVZa text-error mb-0"
+    >
+      418
+    </h1>
+    <h6
+      className="mb-1 mt-1 text-body"
+    >
+      I'm a teapot
+       
+    </h6>
+    <br />
+  </div>
+  <div
+    className="sc-bdfBwQ eZppOP"
+  >
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+    <span />
+  </div>
+</div>
+`;

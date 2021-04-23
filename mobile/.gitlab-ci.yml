@@ -1,0 +1,106 @@
+mobile-lint-and-test:
+  stage: Lint And Test
+  tags: [okra_runner, docker]
+  image: node:14-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+      - mobile/node_modules/
+      - shared/node_modules/
+      - desktop/node_modules/
+      - desktop/.next/cache/
+      - mobile/.next/cache/
+  script:
+    - yarn
+    - yarn lint
+    - yarn shared test
+    - yarn mobile test
+    - yarn mobile build
+    - node ./mobile/check-for-missing-translations.js
+    # TODO: Still can't figure out what library is making the es-checker to fail.
+    # - yarn mobile build:es5
+  after_script:
+    - docker-compose down
+
+mobile-cypress:
+  stage: Cypress Tests
+  tags: [okra_runner, docker]
+  script:
+    - echo "Not yet implemented"
+
+mobile-build-non-prod:
+  stage: Build Non-Prod
+  tags: [okra_runner, docker]
+  when: manual
+  variables:
+    IMAGE_NAME: ${AWS_ACCT_MASTER}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${MOBILE_APP_NAME}:${CI_COMMIT_SHORT_SHA}
+    AWS_ACCOUNT_ID: "$AWS_ACCT_MASTER"
+    AWS_ACCESS_KEY_ID: "$MASTER_AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "$MASTER_AWS_SECRET_ACCESS_KEY"
+  script:
+    - "echo Building image: $IMAGE_NAME"
+    - docker-compose pull aws-cli
+    - docker-compose run --rm aws-cli "aws ecr get-login --no-include-email --registry-ids ${AWS_ACCT_MASTER}" | sh
+    - docker build
+      --file ./mobile/Dockerfile
+      --build-arg NEXT_PUBLIC_MOBILE_VERSION=$CI_COMMIT_SHORT_SHA
+      --no-cache
+      --tag ${IMAGE_NAME} .
+    - docker push ${IMAGE_NAME}
+
+mobile-deploy-non-prod:
+  stage: Deploy Non-Prod
+  tags: [okra_runner, docker]
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  when: manual
+  variables:
+    AWS_ACCOUNT_ID: "$AWS_ACCT_NON_PROD"
+    AWS_ACCESS_KEY_ID: "$NON_PROD_AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "$NON_PROD_AWS_SECRET_ACCESS_KEY"
+  script:
+    - aws ssm put-parameter --name 'harvest-mobile-tag' --type 'String' --value ${CI_COMMIT_SHORT_SHA} --overwrite
+    - aws cloudformation update-stack --stack-name HarvestMobileStack --use-previous-template --capabilities CAPABILITY_IAM
+
+# This stage can only be run if a master commit has a git tag
+mobile-build-prod:
+  stage: Build Prod
+  tags: [okra_runner, docker]
+  only:
+    - /^v(\d+)\.(\d+)\.(\d+)(\b-mobile\b)$/ # Only trigger on tags formatted: v0.0.0-mobile
+  except:
+    - branches
+  when: manual
+  variables:
+    IMAGE_NAME_PROD: ${AWS_ACCT_MASTER}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${MOBILE_APP_NAME}:${CI_COMMIT_TAG}
+    AWS_ACCOUNT_ID: "$AWS_ACCT_MASTER"
+    AWS_ACCESS_KEY_ID: "$MASTER_AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "$MASTER_AWS_SECRET_ACCESS_KEY"
+  script:
+    - "echo Building image: $IMAGE_NAME_PROD"
+    - docker-compose pull aws-cli
+    - docker-compose run --rm aws-cli "aws ecr get-login --no-include-email --registry-ids ${AWS_ACCT_MASTER}" | sh
+    - docker build
+      --file ./mobile/Dockerfile
+      --build-arg NEXT_PUBLIC_MOBILE_VERSION=$CI_COMMIT_TAG
+      --no-cache
+      --tag ${IMAGE_NAME_PROD} .
+    - docker push ${IMAGE_NAME_PROD}
+
+# This stage can only be run if a master commit has a git tag
+mobile-deploy-prod:
+  stage: Deploy Prod
+  tags: [okra_runner, docker]
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  only:
+    - /^v(\d+)\.(\d+)\.(\d+)(\b-mobile\b)$/ # Only trigger on tags formatted: v0.0.0-mobile
+  except:
+    - branches
+  when: manual
+  variables:
+    AWS_ACCOUNT_ID: "$AWS_ACCT_PROD"
+    AWS_ACCESS_KEY_ID: "$PROD_AWS_ACCESS_KEY_ID"
+    AWS_SECRET_ACCESS_KEY: "$PROD_AWS_SECRET_ACCESS_KEY"
+  script:
+    - aws ssm put-parameter --name 'harvest-mobile-tag' --type 'String' --value ${CI_COMMIT_TAG} --overwrite
+    - aws cloudformation update-stack --stack-name HarvestMobileStack --use-previous-template --capabilities CAPABILITY_IAM

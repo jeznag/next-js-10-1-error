@@ -1,0 +1,77 @@
+{
+    "name": "harvest-alpha",
+    "version": "1.0.0",
+    "description": "",
+    "author": "Damian Veling",
+    "repository": "git@gitlab.com:okrasolar/cloud/harvest-alpha.git",
+    "license": "UNLICENSED",
+    "scripts": {
+        "api": "docker-compose run --service-ports --rm xmysql",
+        "apollo": "docker-compose run --service-ports --rm apollo",
+        "down": "docker-compose down",
+        "up": "docker-compose up -d xmysql apollo",
+        "shared": "yarn workspace shared",
+        "desktop": "yarn workspace desktop",
+        "mobile": "yarn workspace mobile",
+        "lint": "eslint --quiet -c .eslintrc.js --ext .ts,.tsx,.js,.jsx .",
+        "lint:fix": "yarn lint --fix",
+        "build": "yarn clean && yarn desktop build && yarn mobile build",
+        "build:es5": "yarn shared build:es5 && yarn desktop build:es5 && yarn mobile build:es5",
+        "clean": "yarn shared clean && yarn desktop clean && yarn mobile clean",
+        "clean:node_modules": "rm -rf node_modules ./shared/node_modules ./desktop/node_modules ./mobile/node_modules",
+        "test": "yarn shared test && yarn desktop test && yarn mobile test",
+        "postinstall": "patch-package",
+        "prepare": "husky install"
+    },
+    "private": "true",
+    "workspaces": {
+        "packages": [
+            "desktop",
+            "mobile",
+            "shared"
+        ],
+        "nohoist": [
+            "**/next-redux-wrapper",
+            "**/terser-webpack-plugin",
+            "husky"
+        ]
+    },
+    "lint-staged": {
+        "src/**/*.{ts,tsx}": [
+            "yarn lint:fix",
+            "git add"
+        ]
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/core": "^7.12.3",
+        "@typescript-eslint/eslint-plugin": "^4.5.0",
+        "@typescript-eslint/parser": "^4.5.0",
+        "babel-jest": "^26.6.3",
+        "babel-plugin-module-resolver": "^4.0.0",
+        "babel-polyfill": "^6.26.0",
+        "es-check": "^5.1.1",
+        "eslint": "^7.4.0",
+        "eslint-config-standard": "^14.1.1",
+        "eslint-import-resolver-ts": "^0.4.2",
+        "eslint-plugin-chai-friendly": "^0.6.0",
+        "eslint-plugin-cypress": "^2.11.1",
+        "eslint-plugin-import": "^2.22.0",
+        "eslint-plugin-jest": "^23.18.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-react": "^7.20.3",
+        "eslint-plugin-react-hooks": "^4.0.6",
+        "eslint-plugin-standard": "^4.0.1",
+        "husky": "^6.0.0",
+        "jest": "^26.6.3",
+        "lint-staged": "^10.5.4",
+        "patch-package": "^6.4.5",
+        "typescript": "^4.0.3"
+    }
+}

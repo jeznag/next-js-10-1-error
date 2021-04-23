@@ -1,0 +1,5 @@
+{
+  "name": "controllers",
+  "private": true,
+  "main": "../build/controllers/index.js"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "api",
+  "private": true,
+  "main": "../../build/services/api/index.js"
+}

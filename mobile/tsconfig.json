@@ -1,0 +1,34 @@
+{
+  "extends": "../tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "build",
+    "public"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
+  ],
+  "references": [
+    {
+      "path": "../shared"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "esnext",
+    "target": "es6",
+    "jsx": "preserve",
+    "paths": {
+      "@pages/*": ["src/pages/*"],
+      "@containers/*": ["src/containers/*"],
+      "@lib/*": ["src/lib/*"],
+      "@components/*": ["src/components/*"],
+      "@state/*": ["src/state/*"],
+      "@i18n": ["src/i18n.ts"]
+    }
+  }
+}

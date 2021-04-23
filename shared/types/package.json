@@ -1,0 +1,5 @@
+{
+  "name": "types",
+  "private": true,
+  "main": "../build/types/index.js"
+}

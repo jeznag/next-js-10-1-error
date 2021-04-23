@@ -1,0 +1,75 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": "./",
+        "module": "commonjs",
+        "target": "es6",
+        "declaration": true,
+        "declarationMap": true,
+        "composite": true,
+        "outDir": "build",
+        "lib": [
+            "dom",
+            "es2019",
+            "es6"
+        ],
+        "rootDir": ".",
+        "paths": {
+            "@api": [
+                "services/api/index.ts"
+            ],
+            "@services/*": [
+                "services/*"
+            ],
+            "@services": [
+                "services/index.ts"
+            ],
+            "@apollo": [
+                "services/apollo/index.ts"
+            ],
+            "@utils": [
+                "utils/index.ts"
+            ],
+            "@shared-types": [
+                "types/index.ts"
+            ],
+            "@controllers": [
+                "controllers/index.ts"
+            ],
+            "@components": [
+                "components/index.ts"
+            ],
+            "@state": [
+                "state/index.ts"
+            ],
+            "@mock-data/*": [
+                "tests/__mocks__/data/*"
+            ]
+        },
+        "plugins": [
+            {
+                "transform": "typescript-transform-paths"
+            }
+        ],
+        "noEmit": false,
+        "types": [
+            "jest"
+        ],
+        "typeRoots": [
+            "../node_modules/@types",
+            "./node_modules/@types"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "build",
+        "tests"
+    ],
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx",
+        "tests/__mocks__/data/*"
+    ]
+}

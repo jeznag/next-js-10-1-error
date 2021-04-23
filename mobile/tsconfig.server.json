@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "build/src",
+    "target": "es6",
+    "isolatedModules": false,
+    "noEmit": false,
+    "allowJs": true
+  },
+  "include": ["src/main.ts"],
+  "exclude": ["**/*.js"],
+  "references": [{"path": "../shared"}]
+}

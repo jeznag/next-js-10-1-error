@@ -1,0 +1,5 @@
+{
+  "name": "state",
+  "private": true,
+  "main": "../build/state/index.js"
+}
