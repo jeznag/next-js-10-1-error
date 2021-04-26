@@ -48,7 +48,6 @@ export enum ActivityType {
 * These constants can be safely used on the client or server
 */
 export const Constants = {
-    GOOGLE_MAPS_API_KEY: 'AIzaSyDMdJFlr22N2va-cH-wnDPvErAY15-hS0M',
     OKRA_DESCO_NAME: 'Okra',
 
     // NOTE: For date format updates, please follow the format table.
